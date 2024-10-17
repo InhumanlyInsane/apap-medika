@@ -36,9 +36,7 @@ public class Appointment2206082505Application {
 			var fakeAppointment = faker.leagueOfLegends();
 			var fakeDate = faker.date();
 
-			// appointment.getDoctor().setName(fakeAppointment.champion());
-			// appointment.getPatient().setName(fakeAppointment.champion());
-			appointment.setDate(fakeDate.past(2, TimeUnit.DAYS));
+			appointment.setDate(fakeDate.between(fakeDate.past(10, TimeUnit.DAYS), fakeDate.future(10, TimeUnit.DAYS)));
 			appointment.setDiagnosis(fakeAppointment.quote());
 			appointment.setTotalFee(1000L);
 			appointment.setStatus(0);

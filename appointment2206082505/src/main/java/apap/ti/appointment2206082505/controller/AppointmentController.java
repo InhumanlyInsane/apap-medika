@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import apap.ti.appointment2206082505.service.AppointmentService;
 
@@ -31,6 +32,13 @@ public class AppointmentController {
             model.addAttribute("errorMessage", e.getMessage());
             return "response-error-rest";
         }
+    }
+
+    @GetMapping("/appointment/{id}")
+    public String detailAppointment(@PathVariable("id") String id, Model model) {
+        var appointment = appointmentService.getAppointmentById(id);
+        model.addAttribute("appointment", appointment);
+        return "detail-appointment";
     }
 
 }

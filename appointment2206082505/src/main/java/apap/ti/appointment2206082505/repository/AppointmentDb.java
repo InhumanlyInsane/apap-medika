@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 import apap.ti.appointment2206082505.model.Appointment;
 
 @Repository
-public interface AppointmentDb extends JpaRepository<Appointment, UUID> {
+public interface AppointmentDb extends JpaRepository<Appointment, String> {
     
     @Query("SELECT a FROM Appointment a")
     List<Appointment> findAllAppointments();

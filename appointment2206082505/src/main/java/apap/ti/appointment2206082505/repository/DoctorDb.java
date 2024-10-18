@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 import apap.ti.appointment2206082505.model.Doctor;
 
 @Repository
-public interface DoctorDb extends JpaRepository<Doctor, UUID> {
+public interface DoctorDb extends JpaRepository<Doctor, String> {
 
 }

@@ -49,7 +49,7 @@ public class Appointment2206082505Application {
 			doctor.setEmail("fakedoctor@test.com");
 			doctor.setGender(faker.bool().bool());
 			doctor.setYearsOfExperience(faker.number().numberBetween(0, 50));
-			doctor.setSchedule(List.of(1, 2, 3, 4, 5));
+			doctor.setSchedule(List.of(1, 2, 3, 4, 7));
 			doctor.setFee(1000L);
 			doctor.setCreatedAt(fakeDate.past(5, TimeUnit.DAYS));
 			doctor.setUpdatedAt(fakeDate.past(1, TimeUnit.DAYS));

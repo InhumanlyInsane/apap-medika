@@ -12,7 +12,7 @@ import java.util.*;
 @Data
 public class DoctorResponseDTO {
 
-    private UUID id;
+    private String id;
     private String name;
     private Integer specialist;
     private String email;

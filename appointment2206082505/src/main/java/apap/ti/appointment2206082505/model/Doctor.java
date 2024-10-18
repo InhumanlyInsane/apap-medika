@@ -17,7 +17,7 @@ import jakarta.persistence.Table;
 public class Doctor {
     
     @Id
-    private UUID id = UUID.randomUUID();
+    private String id;
 
     @NotNull
     @Size(max = 255)

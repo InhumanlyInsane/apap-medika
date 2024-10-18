@@ -1,6 +1,7 @@
 package apap.ti.appointment2206082505.controller;
 
-import java.time.Instant;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import apap.ti.appointment2206082505.dto.AddPatientAppointmentWrapperDTO;
 import apap.ti.appointment2206082505.dto.request.AddAppointmentRequestDTO;
 import apap.ti.appointment2206082505.model.Appointment;
 import apap.ti.appointment2206082505.model.Doctor;
+import apap.ti.appointment2206082505.model.Patient;
 import apap.ti.appointment2206082505.service.AppointmentService;
 import apap.ti.appointment2206082505.service.DoctorService;
 import apap.ti.appointment2206082505.service.PatientService;
@@ -87,8 +90,59 @@ public class AppointmentController {
 
         model.addAttribute("responseMessage", 
             String.format("Appointment with ID %s has been successfully created", appointment.getId()));
-            
+
         return "success-create-appointment";
+    }
+
+    @GetMapping("/appointment/create-with-patient")
+    public String formCreatePatientAppointment(Model model) {
+        var wrapperDTO = new AddPatientAppointmentWrapperDTO();
+        List<Doctor> allDoctors = doctorService.getAllDoctor();
+
+        model.addAttribute("wrapperDTO", wrapperDTO);
+        model.addAttribute("allDoctors", allDoctors);
+
+        return "form-create-patient-appointment";
+    }
+
+    @PostMapping("/appointment/create-with-patient")
+    public String createPatientAppointment(@ModelAttribute AddPatientAppointmentWrapperDTO wrapperDTO, Model model) {
+        var patientDTO = wrapperDTO.getPatientDTO();
+        var appointmentDTO = wrapperDTO.getAppointmentDTO();
+        var doctor = doctorService.getDoctorById(appointmentDTO.getDoctorId());
+
+        var patient = new Patient();
+        patient.setName(patientDTO.getName());
+        patient.setNik(patientDTO.getNik());
+        patient.setEmail(patientDTO.getEmail());
+        patient.setGender(patientDTO.getGender());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        LocalDate localBirthDate = LocalDate.parse(patientDTO.getBirthDate(), formatter);
+        Date parsedBirthDate = Date.from(localBirthDate.atStartOfDay(ZoneId.systemDefault()).toInstant());
+        patient.setBirthDate(parsedBirthDate);
+        patient.setBirthPlace(patientDTO.getBirthPlace());
+
+        var appointment = new Appointment();
+        appointment.setDoctor(doctor);
+        appointment.setPatient(patient);
+        Date scheduledDate = Date.from(Instant.parse(appointmentDTO.getAppointmentDate()));
+        appointment.setDate(scheduledDate);
+        appointment.setDiagnosis(null);
+        appointment.setTreatments(null);
+        appointment.setTotalFee(doctor.getFee());
+        appointment.setStatus(0);
+        
+        List<Appointment> listAppointment = new ArrayList<>();
+        listAppointment.add(appointment);
+        patient.setAppointments(listAppointment);
+
+        patientService.addPatient(patient);
+        appointmentService.addAppointment(appointment);
+
+        model.addAttribute("responseMessage",
+            String.format("Patient %s and Appointment %s has been successfully created", patient.getName(), appointment.getId()));
+
+        return "success-create-patient-appointment";
     }
 
 }

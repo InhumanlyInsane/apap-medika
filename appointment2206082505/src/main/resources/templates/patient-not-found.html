@@ -21,9 +21,14 @@
 <body>
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
-        <h1>PATIENT NOT FOUND!</h1>
+    <div class="d-flex flex-column align-items-center justify-content-center" style="height: 80vh;">
+        <h1 class="text-center fw-bold">Patient Not Found</h1>
+        <p class="text-center">Please insert a new patient before making an appointment</p>
+        <div class="text-center">
+            <a href="/appointment/create-with-patient" class="btn btn-primary">Insert New Patient</a>
+        </div>
     </div>
+
 </body>
 
 </html>

@@ -8,4 +8,6 @@ public interface DoctorService {
     Doctor addDoctor(Doctor doctor);
     List<Doctor> getAllDoctor();
     Doctor getDoctorById(String id);
+    Map<Integer, String> getSpecializationMap();
+    String convertScheduleToDayNames(List<Integer> schedule);
 }

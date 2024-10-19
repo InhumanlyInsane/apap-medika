@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.11.5/css/dataTables.bootstrap5.min.css">
+    <title>APAP Medika</title>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+</head>
+
+<body>
+    <nav th:replace="~{fragments/navbar :: navbar}"></nav>
+    <div class="container mt-5 mb-5">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5 class="mb-0">All Doctors</h5>
+                <a type="button" class="btn btn-primary" href="/">Add Doctor</a>
+            </div>
+            <div class="card-body">
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <input type="text" id="searchName" class="form-control" placeholder="Search by Doctor Name">
+                    </div>
+                    <div class="col-md-4">
+                        <select id="filterSpecialization" class="form-select">
+                            <option value="">All Specializations</option>
+                            <option th:each="entry : ${specializationMap.entrySet()}" th:value="${entry.value}" th:text="${entry.value}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <select id="filterDays" class="form-select">
+                            <option value="">All Days</option>
+                            <option value="Monday">Monday</option>
+                            <option value="Tuesday">Tuesday</option>
+                            <option value="Wednesday">Wednesday</option>
+                            <option value="Thursday">Thursday</option>
+                            <option value="Friday">Friday</option>
+                            <option value="Saturday">Saturday</option>
+                            <option value="Sunday">Sunday</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="table-responsive">
+                    <table id="doctorsTable" class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>No</th>
+                                <th>ID</th>
+                                <th>Doctor</th>
+                                <th>Specialization</th>
+                                <th>Schedule (Days)</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="doctor, iterStat : ${listDoctor}">
+                                <td th:text="${iterStat.count}"></td>
+                                <td th:text="${doctor.id}"></td>
+                                <td th:text="${doctor.name}"></td>
+                                <td th:text="${specializationMap[doctor.specialist]}"></td>
+                                <td th:text="${doctorService.convertScheduleToDayNames(doctor.schedule)}"></td>
+                                <td>
+                                    <a type="button" class="btn btn-md btn-primary" href="/">Detail</a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.11.5/js/dataTables.bootstrap5.min.js"></script>
+    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+
+    <script>
+        $(document).ready(function () {
+            var table = $('#doctorsTable').DataTable({
+                "lengthMenu": [10, 20, 30],
+                "searching": false, // Disable default search
+                "language": {
+                    "search": "" // Remove search label
+                }
+            });
+
+            function applyFilters() {
+                var nameFilter = $('#searchName').val().toLowerCase();
+                var specializationFilter = $('#filterSpecialization').val().toLowerCase();
+                var dayFilter = $('#filterDays').val().toLowerCase();
+
+                table.rows().every(function() {
+                    var row = this.node();
+                    var name = $(row).find('td:eq(2)').text().toLowerCase();
+                    var specialization = $(row).find('td:eq(3)').text().toLowerCase();
+                    var schedule = $(row).find('td:eq(4)').text().toLowerCase();
+
+                    var nameMatch = name.includes(nameFilter);
+                    var specializationMatch = !specializationFilter || specialization === specializationFilter;
+                    var dayMatch = !dayFilter || schedule.includes(dayFilter);
+
+                    this.nodes().to$().toggle(nameMatch && specializationMatch && dayMatch);
+                });
+            }
+
+            $('#searchName, #filterSpecialization, #filterDays').on('keyup change', applyFilters);
+        });
+    </script>
+</body>
+
+</html>

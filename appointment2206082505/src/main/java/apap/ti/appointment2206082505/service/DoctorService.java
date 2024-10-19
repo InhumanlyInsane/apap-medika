@@ -10,4 +10,5 @@ public interface DoctorService {
     Doctor getDoctorById(String id);
     Map<Integer, String> getSpecializationMap();
     String convertScheduleToDayNames(List<Integer> schedule);
+    Doctor updateDoctor(Doctor doctor);
 }

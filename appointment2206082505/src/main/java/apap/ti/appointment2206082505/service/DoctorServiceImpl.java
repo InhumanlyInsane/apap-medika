@@ -75,6 +75,25 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public Doctor updateDoctor(Doctor doctor) {
+        Doctor existingDoctor = getDoctorById(doctor.getId());
+
+        if (existingDoctor != null) {
+            existingDoctor.setName(doctor.getName());
+            existingDoctor.setEmail(doctor.getEmail());
+            existingDoctor.setGender(doctor.getGender());
+            existingDoctor.setSpecialist(doctor.getSpecialist());
+            existingDoctor.setYearsOfExperience(doctor.getYearsOfExperience());
+            existingDoctor.setFee(doctor.getFee());
+            existingDoctor.setSchedule(doctor.getSchedule());
+            doctorDb.save(existingDoctor);
+            return existingDoctor;
+        }
+
+        return null;
+    }
+
+    @Override
     public List<Doctor> getAllDoctor() {
         return doctorDb.findAll();
     }

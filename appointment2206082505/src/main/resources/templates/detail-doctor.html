@@ -23,7 +23,7 @@
                     <h5 class="mb-0 me-2">Doctor Detail</h5>
                 </div>
                 <div class="d-flex gap-2">
-                    <a type="button" class="btn btn-info" href="#">Update</a>
+                    <a type="button" class="btn btn-info" th:href="@{/doctor/{id}/update(id=${doctor.id})}">Update</a>
                     <a type="button" class="btn btn-danger" href="#">Delete</a>
                 </div>
             </div>

@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.ti.appointment2206082505.dto.request.AddDoctorRequestDTO;
 import apap.ti.appointment2206082505.dto.request.UpdateAppointmentRequestDTO;
+import apap.ti.appointment2206082505.dto.request.UpdateDoctorRequestDTO;
 import apap.ti.appointment2206082505.model.Doctor;
 import apap.ti.appointment2206082505.service.DoctorService;
 
@@ -81,7 +82,7 @@ public class DoctorController {
     }
 
     @PostMapping(value = "/doctor/create", params = {"addRow"})
-    public String addRowSchedule(@ModelAttribute AddDoctorRequestDTO doctorDTO, Model model) {
+    public String addRowScheduleCreate(@ModelAttribute AddDoctorRequestDTO doctorDTO, Model model) {
         if (doctorDTO.getSchedule() == null) {
             doctorDTO.setSchedule(new ArrayList<>());
         }
@@ -94,11 +95,11 @@ public class DoctorController {
     }
 
     @PostMapping(value = "/doctor/create", params = {"deleteRow"})
-    public String deleteRowSchedule(@ModelAttribute AddDoctorRequestDTO doctorDTO, @RequestParam("deleteRow") int rowId, Model model) {
+    public String deleteRowScheduleCreate(@ModelAttribute AddDoctorRequestDTO doctorDTO, @RequestParam("deleteRow") int rowId, Model model) {
         if (doctorDTO.getSchedule() == null) {
             doctorDTO.setSchedule(new ArrayList<>());
         }
-        
+
         if (doctorDTO.getSchedule().size() > 1) {
             doctorDTO.getSchedule().remove(rowId);
         }
@@ -106,6 +107,85 @@ public class DoctorController {
         model.addAttribute("specializationList", specializationList);
         model.addAttribute("doctorDTO", doctorDTO);
         return "form-create-doctor";
+    }
+
+    @GetMapping("/doctor/{id}/update")
+    public String formUpdateDoctor(@PathVariable("id") String id, Model model) {
+        var doctor = doctorService.getDoctorById(id);
+        
+        var doctorDTO = new UpdateDoctorRequestDTO();
+        doctorDTO.setId(doctor.getId());
+        doctorDTO.setName(doctor.getName());
+        doctorDTO.setEmail(doctor.getEmail());
+        doctorDTO.setGender(doctor.getGender());
+        doctorDTO.setSpecialization(doctorService.getSpecializationMap().get(doctor.getSpecialist()));
+        doctorDTO.setYearsOfExperience(doctor.getYearsOfExperience());
+        doctorDTO.setFee(doctor.getFee());
+
+        List<String> schedule = new ArrayList<>();
+        for (int scheduleInt : doctor.getSchedule()) {
+            String dayName = mapIntegerToDay(scheduleInt);
+            schedule.add(dayName);
+        }
+        doctorDTO.setSchedule(schedule);
+
+        var specializationList = doctorService.getSpecializationMap().values();
+
+        model.addAttribute("doctorDTO", doctorDTO);
+        model.addAttribute("specializationList", specializationList);
+
+        return "form-update-doctor";
+    }
+
+    @PostMapping("/doctor/update")
+    public String updateDoctor(@ModelAttribute UpdateDoctorRequestDTO doctorDTO, Model model) {
+        Doctor doctor = doctorService.getDoctorById(doctorDTO.getId());
+        doctor.setName(doctorDTO.getName());
+        doctor.setEmail(doctorDTO.getEmail());
+        doctor.setGender(doctorDTO.getGender());
+        doctor.setSpecialist(mapSpecializationToInteger(doctorDTO.getSpecialization()));
+        doctor.setYearsOfExperience(doctorDTO.getYearsOfExperience());
+        doctor.setFee(doctorDTO.getFee());
+
+        List<Integer> scheduleIntegers = doctorDTO.getSchedule().stream()
+                .map(this::mapDayToInteger)
+                .collect(Collectors.toList());
+        doctor.setSchedule(scheduleIntegers);
+
+        doctorService.updateDoctor(doctor);
+
+        model.addAttribute("responseMessage", 
+            String.format("Doctor with ID %s has been updated", doctor.getId()));
+        
+        return "success-update-doctor";
+    }
+
+    @PostMapping(value = "/doctor/update", params = {"addRow"})
+    public String addRowScheduleUpdate(@ModelAttribute UpdateDoctorRequestDTO doctorDTO, Model model) {
+        if (doctorDTO.getSchedule() == null) {
+            doctorDTO.setSchedule(new ArrayList<>());
+        }
+
+        doctorDTO.getSchedule().add("");
+        var specializationList = doctorService.getSpecializationMap().values();
+        model.addAttribute("specializationList", specializationList);
+        model.addAttribute("doctorDTO", doctorDTO);
+        return "form-update-doctor";
+    }
+
+    @PostMapping(value = "/doctor/update", params = {"deleteRow"})
+    public String deleteRowScheduleUpdate(@ModelAttribute UpdateDoctorRequestDTO doctorDTO, @RequestParam("deleteRow") int rowId, Model model) {
+        if (doctorDTO.getSchedule() == null) {
+            doctorDTO.setSchedule(new ArrayList<>());
+        }
+
+        if (doctorDTO.getSchedule().size() > 1) {
+            doctorDTO.getSchedule().remove(rowId);
+        }
+        var specializationList = doctorService.getSpecializationMap().values();
+        model.addAttribute("specializationList", specializationList);
+        model.addAttribute("doctorDTO", doctorDTO);
+        return "form-update-doctor";
     }
 
     private Integer mapDayToInteger(String day) {
@@ -118,6 +198,19 @@ public class DoctorController {
             case "saturday" -> 6;
             case "sunday" -> 7;
             default -> throw new IllegalArgumentException("Invalid day: " + day);
+        };
+    }
+
+    private String mapIntegerToDay(int dayNumber) {
+        return switch (dayNumber) {
+            case 1 -> "monday";
+            case 2 -> "tuesday";
+            case 3 -> "wednesday";
+            case 4 -> "thursday";
+            case 5 -> "friday";
+            case 6 -> "saturday";
+            case 7 -> "sunday";
+            default -> throw new IllegalArgumentException("Invalid day number: " + dayNumber);
         };
     }
 

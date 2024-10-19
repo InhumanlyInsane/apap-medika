@@ -160,7 +160,7 @@ public class AppointmentController {
     public String formUpdateAppointment(@PathVariable("id") String id, Model model) {
         var appointment = appointmentService.getAppointmentById(id);
 
-        // Check if the appointment is within 24 hours
+        // Periksa pelanggaran 24 jam
         LocalDateTime appointmentDateTime = appointment.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
         LocalDateTime now = LocalDateTime.now();
         long hoursDifference = ChronoUnit.HOURS.between(now, appointmentDateTime);
@@ -171,13 +171,11 @@ public class AppointmentController {
             return "appointment-update-error";
         }
 
-        // If we're here, it's okay to show the update form
         var appointmentDTO = new UpdateAppointmentRequestDTO();
         appointmentDTO.setAppointmentDate(appointment.getDate().toString());
         appointmentDTO.setDoctorId(appointment.getDoctor().getId());
         appointmentDTO.setId(appointment.getId());
 
-        // Format the appointment date
         DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("EEEE, d MMMM yyyy");
         String formattedDate = appointmentDateTime.format(outputFormatter);
 

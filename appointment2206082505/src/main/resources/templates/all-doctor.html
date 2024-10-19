@@ -16,7 +16,7 @@
     <div class="container mt-5 mb-5">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                <h5 class="mb-0">All Doctors</h5>
+                <h5 class="mb-0">Doctors</h5>
                 <a type="button" class="btn btn-primary" href="/">Add Doctor</a>
             </div>
             <div class="card-body">
@@ -63,7 +63,7 @@
                                 <td th:text="${specializationMap[doctor.specialist]}"></td>
                                 <td th:text="${doctorService.convertScheduleToDayNames(doctor.schedule)}"></td>
                                 <td>
-                                    <a type="button" class="btn btn-md btn-primary" href="/">Detail</a>
+                                    <a type="button" class="btn btn-md btn-primary" th:href="@{/doctor/{id}(id=${doctor.id})}">Detail</a>
                                 </td>
                             </tr>
                         </tbody>

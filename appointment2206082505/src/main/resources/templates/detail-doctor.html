@@ -24,7 +24,7 @@
                 </div>
                 <div class="d-flex gap-2">
                     <a type="button" class="btn btn-info" th:href="@{/doctor/{id}/update(id=${doctor.id})}">Update</a>
-                    <a type="button" class="btn btn-danger" href="#">Delete</a>
+                    <a type="button" class="btn btn-danger" th:href="@{/doctor/{id}/delete(id=${doctor.id})}">Delete</a>
                 </div>
             </div>
             <div class="card-body">

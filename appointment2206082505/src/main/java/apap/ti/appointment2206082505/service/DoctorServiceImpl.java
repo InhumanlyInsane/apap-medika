@@ -94,6 +94,11 @@ public class DoctorServiceImpl implements DoctorService {
     }
 
     @Override
+    public void deleteDoctor(Doctor doctor) {
+        doctorDb.delete(doctor);
+    }
+
+    @Override
     public List<Doctor> getAllDoctor() {
         return doctorDb.findAll();
     }

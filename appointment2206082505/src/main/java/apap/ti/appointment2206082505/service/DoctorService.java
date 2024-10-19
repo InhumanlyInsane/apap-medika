@@ -11,4 +11,5 @@ public interface DoctorService {
     Map<Integer, String> getSpecializationMap();
     String convertScheduleToDayNames(List<Integer> schedule);
     Doctor updateDoctor(Doctor doctor);
+    void deleteDoctor(Doctor doctor);
 }

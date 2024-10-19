@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.ti.appointment2206082505.dto.request.AddDoctorRequestDTO;
+import apap.ti.appointment2206082505.dto.request.DeleteDoctorRequestDTO;
 import apap.ti.appointment2206082505.dto.request.UpdateAppointmentRequestDTO;
 import apap.ti.appointment2206082505.dto.request.UpdateDoctorRequestDTO;
 import apap.ti.appointment2206082505.model.Doctor;
@@ -187,6 +188,30 @@ public class DoctorController {
         model.addAttribute("doctorDTO", doctorDTO);
         return "form-update-doctor";
     }
+
+    @GetMapping("/doctor/{id}/delete")
+    public String formDeleteDoctor(@PathVariable("id") String id, Model model) {
+        var doctorDTO = new DeleteDoctorRequestDTO();
+        doctorDTO.setId(id);
+
+        model.addAttribute("doctorDTO", doctorDTO);
+        model.addAttribute("message", 
+            String.format("Are you sure you want to delete doctor ID %s?", id));
+        
+        return "form-delete-doctor";
+    }
+
+    @PostMapping("/doctor/delete")
+    public String deleteDoctor(@ModelAttribute DeleteDoctorRequestDTO doctorDTO, Model model) {
+        var doctor = doctorService.getDoctorById(doctorDTO.getId());
+        doctorService.deleteDoctor(doctor);
+
+        model.addAttribute("responseMessage", 
+            String.format("Doctor with ID %s has been successfully deleted", doctor.getId()));
+        return "success-delete-doctor";
+    }
+
+
 
     private Integer mapDayToInteger(String day) {
         return switch (day.trim().toLowerCase()) {

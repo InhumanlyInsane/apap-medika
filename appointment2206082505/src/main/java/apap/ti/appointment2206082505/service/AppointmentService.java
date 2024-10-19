@@ -9,4 +9,7 @@ public interface AppointmentService {
     List<AppointmentResponseDTO> getAllAppointmentsFromRest() throws Exception;
     Appointment getAppointmentById(String id);    
     Appointment addAppointment(Appointment appointment);
+    Appointment updateAppointmentDoctorDate(Appointment appointment);
+    Appointment updateAppointmentDiagnosisTreatment(Appointment appointment);
+    Appointment updateStatus(Appointment appointment, int status);
 }

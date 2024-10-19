@@ -16,6 +16,7 @@ import apap.ti.appointment2206082505.model.Patient;
 import apap.ti.appointment2206082505.service.AppointmentService;
 import apap.ti.appointment2206082505.service.DoctorService;
 import apap.ti.appointment2206082505.service.PatientService;
+import apap.ti.appointment2206082505.service.TreatmentService;
 import jakarta.transaction.Transactional;
 
 @SpringBootApplication
@@ -27,7 +28,7 @@ public class Appointment2206082505Application {
 
 	@Bean
 	@Transactional
-	CommandLineRunner run(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService) {
+	CommandLineRunner run(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService, TreatmentService treatmentService) {
 		return args -> {
 			@SuppressWarnings("deprecation")
 			var faker = new Faker(new Locale("in-ID"));
@@ -36,10 +37,11 @@ public class Appointment2206082505Application {
 			var fakeAppointment = faker.leagueOfLegends();
 			var fakeDate = faker.date();
 
-			appointment.setDate(fakeDate.between(fakeDate.past(10, TimeUnit.DAYS), fakeDate.future(10, TimeUnit.DAYS)));
+			appointment.setDate(fakeDate.future(10, TimeUnit.DAYS));
 			appointment.setDiagnosis(fakeAppointment.quote());
 			appointment.setTotalFee(1000L);
 			appointment.setStatus(0);
+			appointment.setTreatments(null);
 			appointment.setCreatedAt(fakeDate.past(5, TimeUnit.DAYS));
 			appointment.setUpdatedAt(fakeDate.past(1, TimeUnit.DAYS));
 

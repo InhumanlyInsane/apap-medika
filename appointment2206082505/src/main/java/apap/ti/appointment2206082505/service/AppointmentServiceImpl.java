@@ -71,9 +71,49 @@ public class AppointmentServiceImpl implements AppointmentService{
         return appointmentDb.findById(id).get();
     }
 
-    // DIUTAMAKAN UNTUK FAKER
     @Override
     public Appointment addAppointment(Appointment appointment) {
+        return appointmentDb.save(adjustId(appointment));
+    }
+
+    @Override
+    public Appointment updateAppointmentDoctorDate(Appointment appointment) {
+        Appointment getAppointment = getAppointmentById(appointment.getId());
+
+        if (getAppointment != null) {
+            getAppointment.setDoctor(appointment.getDoctor());
+            getAppointment.setDate(appointment.getDate());
+            appointmentDb.save(getAppointment);
+            return getAppointment;
+        }
+
+        return null;
+    }
+
+    @Override
+    public Appointment updateAppointmentDiagnosisTreatment(Appointment appointment) {
+        Appointment getAppointment = getAppointmentById(appointment.getId());
+
+        if (getAppointment != null) {
+            getAppointment.setDiagnosis(appointment.getDiagnosis());
+            getAppointment.setTreatments(appointment.getTreatments());
+            appointmentDb.save(getAppointment);
+            return getAppointment;
+        }
+
+        return null;
+    }
+
+    @Override
+    public Appointment updateStatus(Appointment appointment, int status) {
+        Appointment getAppointment = getAppointmentById(appointment.getId());
+        getAppointment.setStatus(status);
+        appointmentDb.save(getAppointment);
+
+        return getAppointment;
+    }
+
+    private Appointment adjustId(Appointment appointment) {
         String specializationCode = specializationMap.getOrDefault(appointment.getDoctor().getSpecialist(), "UNK");
         String datePart = new SimpleDateFormat("ddMM").format(appointment.getDate());
         String counterPart = "";
@@ -97,7 +137,7 @@ public class AppointmentServiceImpl implements AppointmentService{
 
         appointment.setId(specializationCode + datePart + counterPart);
 
-        return appointmentDb.save(appointment);
+        return appointment;
     }
 
 }

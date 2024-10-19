@@ -5,7 +5,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-    <title>Appointment Detail</title>
+    <title>APAP Medika</title>
     <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
     <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -26,10 +26,14 @@
                     <span class="badge text-bg-danger" th:if="${appointment.status == 2}">Cancelled</span>
                 </div>
                 <div class="d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary">Mark as Done</button>
-                    <button type="button" class="btn btn-info">Update</button>
-                    <button type="button" class="btn btn-warning">Cancel</button>
-                    <button type="button" class="btn btn-danger">Delete</button>
+                    <form th:action="@{/appointment/{id}/done(id=${appointment.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-outline-secondary">Mark as Done</button>
+                    </form>
+                    <a type="button" class="btn btn-info" th:href="@{/appointment/{id}/update(id=${appointment.id})}">Update</a>
+                    <form th:action="@{/appointment/{id}/cancel(id=${appointment.id})}" method="post" style="display:inline;">
+                        <button type="submit" class="btn btn-warning">Cancel</button>
+                    </form>
+                    <a type="button" class="btn btn-danger">Delete</a>
                 </div>
             </div>
             <div class="card-body">
@@ -47,14 +51,17 @@
                 </div>
                 <div class="mb-3">
                     <h6>Diagnosis</h6>
-                    <textarea class="form-control" rows="3" readonly disabled th:text="${appointment.diagnosis}">No records yet.</textarea>
+                    <input type="text" class="form-control" rows="3" readonly disabled th:value="${appointment.diagnosis != null ? appointment.diagnosis : 'No records yet.'}"></input>
                 </div>
                 <div class="mb-3">
                     <h6>Treatments</h6>
-                    <textarea class="form-control" rows="3" readonly disabled th:text="${appointment.diagnosis}">No treatments yet.</textarea>
+                    <ul class="list-group" th:if="${!appointment.treatments.isEmpty()}">
+                        <li class="list-group-item" th:each="treatment : ${appointment.treatments}" th:text="${treatment.name}"></li>
+                    </ul>
+                    <p th:if="${appointment.treatments == null or appointment.treatments.isEmpty()}">No treatments yet.</p>
                 </div>
                 <div class="mb-2 d-flex justify-content-end">
-                    <button type="button" class="btn btn-info">Add Diagnosis & Treatments</button>
+                    <a type="button" class="btn btn-info" th:href="@{/appointment/{id}/note(id=${appointment.id})}">Add Diagnosis & Treatments</a>
                 </div>
             </div>
         </div>

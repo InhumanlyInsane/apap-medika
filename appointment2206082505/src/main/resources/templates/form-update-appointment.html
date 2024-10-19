@@ -12,8 +12,8 @@
 
     <title>APAP Medika</title>
 
-    <object th:include="~{fragments/common :: js}" th:remove="tag "></object>
-    <object th:include="~{fragments/common :: css}" th:remove="tag "></object>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
 </head>
 
 <body>
@@ -24,26 +24,33 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-body">
-                        <h2 class="text-center mb-4" th:text="'New Appointment for ' + ${patient.name}"></h2>
-                        <form th:action="@{/appointment/{nik}/create(nik=${patient.nik})}" th:object="${appointmentDTO}" method="POST">
+                        <h2 class="text-center mb-4">Update Appointment</h2>
+                        <form th:action="@{/appointment/update}" th:object="${appointmentDTO}" method="POST">
+                            <input type="hidden" th:field="*{id}">
+                            <div class="mb-3">
+                                <label for="appointmentId" class="form-label fw-bold">ID</label>
+                                <input type="text" id="appointmentId" class="form-control" readonly disabled th:value="*{id}">
+                            </div>
                             <div class="mb-3">
                                 <label for="doctor" class="form-label fw-bold">Doctor</label>
-                                <select class="form-select" id="doctor" name="doctorId" th:field="*{doctorId}">
-                                    <option value="" class="text-muted">Select a doctor</option>
+                                <select class="form-select" id="doctor" th:field="*{doctorId}">
                                     <option th:each="doctor : ${allDoctors}" th:value="${doctor.id}"
-                                        th:text="${doctor.name}" th:data-schedule="${doctor.schedule}"></option>
+                                        th:text="${doctor.name}" th:data-schedule="${doctor.schedule}"
+                                        th:selected="${doctor.id == appointmentDTO.doctorId}"></option>
                                 </select>
                             </div>
                             <div class="mb-3">
                                 <label for="schedule" class="form-label fw-bold">Schedule</label>
-                                <select class="form-select" id="schedule" name="scheduleDate" th:field="*{appointmentDate}" disabled>
-                                    <option value="" class="text-muted">Select a schedule</option>
+                                <select class="form-select" id="schedule" th:field="*{appointmentDate}">
+                                    <option th:value="${appointmentDTO.appointmentDate}" 
+                                            th:text="${formattedAppointmentDate}" 
+                                            selected></option>
                                 </select>
                             </div>
 
                             <div class="mb-3">
-                                <button type="submit" class="btn btn-primary">Submit</button>
-                                <a class="btn btn-danger" href="/appointment/all">Cancel</a>
+                                <button type="submit" class="btn btn-primary">Update</button>
+                                <a class="btn btn-danger" th:href="@{/appointment/all}">Cancel</a>
                             </div>
                         </form>
                     </div>
@@ -55,21 +62,26 @@
     <script th:inline="javascript">
         const dayNames = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
         const monthNames = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        
+
         function getNextFourWeeks(dayOfWeek) {
             const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set to beginning of day for accurate comparison
             const dates = [];
             let current = new Date(today.getTime());
-            current.setDate(today.getDate() + (dayOfWeek - today.getDay() + 7) % 7);
+            
+            // Find the next occurrence of the specified day of the week
+            current.setDate(current.getDate() + (dayOfWeek - current.getDay() + 7) % 7);
             
             for (let i = 0; i < 4; i++) {
-                dates.push(new Date(current.getTime()));
+                if (current >= today) {
+                    dates.push(new Date(current.getTime()));
+                }
                 current.setDate(current.getDate() + 7);
             }
             
             return dates;
         }
-        
+
         function formatDate(date) {
             const dayName = dayNames[date.getDay()];
             const day = date.getDate();
@@ -77,14 +89,23 @@
             const year = date.getFullYear();
             return `${dayName}, ${day} ${month} ${year}`;
         }
-        
+
         $(document).ready(function() {
-            $('#doctor').change(function() {
+            const currentAppointmentDate = new Date(/*[[${appointmentDTO.appointmentDate}]]*/ null);
+            
+            function populateSchedule() {
                 const scheduleSelect = $('#schedule');
-                scheduleSelect.empty().append('<option value="">Select a schedule</option>');
-                
-                const selectedOption = $(this).find('option:selected');
+                const selectedOption = $('#doctor').find('option:selected');
                 const schedule = selectedOption.data('schedule');
+                
+                // Keep the current appointment date as the first option if it exists
+                const currentDateOption = scheduleSelect.find('option:first');
+                scheduleSelect.empty();
+                if (currentDateOption.length && currentDateOption.val() !== "") {
+                    scheduleSelect.append(currentDateOption);
+                } else {
+                    scheduleSelect.append('<option value="">Select a schedule</option>');
+                }
                 
                 if (schedule && schedule.length > 0) {
                     const fourWeekDates = [];
@@ -95,17 +116,29 @@
                     
                     fourWeekDates.sort((a, b) => a - b);
                     
+                    const today = new Date();
+                    today.setHours(0, 0, 0, 0); // Set to beginning of day for accurate comparison
+                    
                     fourWeekDates.forEach(date => {
-                        const formattedDate = formatDate(date);
-                        scheduleSelect.append(`<option value="${date.toISOString()}">${formattedDate}</option>`);
+                        if (date >= today && (!currentAppointmentDate || date.toDateString() !== currentAppointmentDate.toDateString())) {
+                            const formattedDate = formatDate(date);
+                            const isoDate = date.toISOString();
+                            scheduleSelect.append(`<option value="${isoDate}">${formattedDate}</option>`);
+                        }
                     });
                     scheduleSelect.prop('disabled', false);
                 } else {
                     scheduleSelect.prop('disabled', true);
                 }
-            });
+            }
+
+            $('#doctor').change(populateSchedule);
+            
+            // Initial population of schedule
+            populateSchedule();
         });
     </script>
+
 </body>
 
 </html>

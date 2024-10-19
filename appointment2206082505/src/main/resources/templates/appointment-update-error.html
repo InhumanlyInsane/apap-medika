@@ -20,10 +20,10 @@
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
     <div class="d-flex flex-column align-items-center justify-content-center" style="height: 80vh;">
-        <h1 class="text-center fw-bold">Appointment Created!</h1>
-        <p class="text-center" th:text="${responseMessage}"></p>
+        <h1 class="text-center fw-bold">Failed to Update!</h1>
+        <p class="text-center" th:text="${errorMessage}"></p>
         <div class="text-center">
-            <a href="/appointment/all" class="btn btn-primary">See all appointments</a>
+            <a th:href="@{/appointment/{id}(id=${appointment.id})}" class="btn btn-primary">Back to Appointment</a>
         </div>
     </div>
 

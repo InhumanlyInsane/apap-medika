@@ -61,7 +61,19 @@
                             <div class="mb-3">
                                 <label class="form-label">Schedule</label>
                                 <div id="scheduleContainer">
-                                    <div th:each="day, status : *{schedule}" class="input-group mb-2">
+                                    <div class="input-group mb-2">
+                                        <select class="form-select" th:field="*{schedule[0]}">
+                                            <option value="">Choose the day...</option>
+                                            <option value="monday">Monday</option>
+                                            <option value="tuesday">Tuesday</option>
+                                            <option value="wednesday">Wednesday</option>
+                                            <option value="thursday">Thursday</option>
+                                            <option value="friday">Friday</option>
+                                            <option value="saturday">Saturday</option>
+                                            <option value="sunday">Sunday</option>
+                                        </select>
+                                    </div>
+                                    <div th:each="day, status : *{schedule}" th:if="${status.index > 0}" class="input-group mb-2">
                                         <select class="form-select" th:field="*{schedule[__${status.index}__]}">
                                             <option value="">Choose the day...</option>
                                             <option value="monday">Monday</option>
@@ -77,8 +89,9 @@
                                         </button>
                                     </div>
                                 </div>
-                                <button type="submit" class="btn btn-secondary" name="addRow">Add Schedule</button>
+                                <button type="submit" class="btn btn-secondary mt-2" name="addRow">Add Schedule</button>
                             </div>
+
                             <div class="text-center">
                                 <button type="submit" class="btn btn-primary">Submit</button>
                                 <a class="btn btn-danger" th:href="@{/doctor/all}">Cancel</a>

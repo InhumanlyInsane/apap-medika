@@ -3,7 +3,6 @@ package apap.ti.appointment2206082505.controller;
 import java.util.stream.Collectors;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.ti.appointment2206082505.dto.request.AddDoctorRequestDTO;
+import apap.ti.appointment2206082505.dto.request.UpdateAppointmentRequestDTO;
 import apap.ti.appointment2206082505.model.Doctor;
 import apap.ti.appointment2206082505.service.DoctorService;
 
@@ -49,6 +49,7 @@ public class DoctorController {
     @GetMapping("/doctor/create")
     public String formCreateDoctor(Model model) {
         var doctorDTO = new AddDoctorRequestDTO();
+        doctorDTO.setSchedule(new ArrayList<>());
         var specializationList = doctorService.getSpecializationMap().values();
         model.addAttribute("specializationList", specializationList);
         model.addAttribute("doctorDTO", doctorDTO);
@@ -84,23 +85,23 @@ public class DoctorController {
         if (doctorDTO.getSchedule() == null) {
             doctorDTO.setSchedule(new ArrayList<>());
         }
+
         doctorDTO.getSchedule().add("");
-        
         var specializationList = doctorService.getSpecializationMap().values();
         model.addAttribute("specializationList", specializationList);
         model.addAttribute("doctorDTO", doctorDTO);
         return "form-create-doctor";
     }
-    
+
     @PostMapping(value = "/doctor/create", params = {"deleteRow"})
     public String deleteRowSchedule(@ModelAttribute AddDoctorRequestDTO doctorDTO, @RequestParam("deleteRow") int rowId, Model model) {
-
         if (doctorDTO.getSchedule() == null) {
             doctorDTO.setSchedule(new ArrayList<>());
         }
-
-        doctorDTO.getSchedule().remove(rowId);
         
+        if (doctorDTO.getSchedule().size() > 1) {
+            doctorDTO.getSchedule().remove(rowId);
+        }
         var specializationList = doctorService.getSpecializationMap().values();
         model.addAttribute("specializationList", specializationList);
         model.addAttribute("doctorDTO", doctorDTO);

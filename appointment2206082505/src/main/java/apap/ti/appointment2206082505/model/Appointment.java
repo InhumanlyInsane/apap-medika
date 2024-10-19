@@ -15,6 +15,8 @@ import jakarta.persistence.Table;
 @AllArgsConstructor
 @Entity
 @Table(name = "appointment")
+@SQLDelete(sql = "UPDATE appointment SET deleted_at = NOW() WHERE id=?")
+@SQLRestriction("deleted_at IS NULL")
 public class Appointment {
     
     @Id
@@ -61,4 +63,7 @@ public class Appointment {
     @Column(name = "updated_at")
     private Date updatedAt;
     
+    @Column(name = "deleted_at")
+    private Date deletedAt;
+
 }

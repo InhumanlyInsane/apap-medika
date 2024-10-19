@@ -140,4 +140,9 @@ public class AppointmentServiceImpl implements AppointmentService{
         return appointment;
     }
 
+    @Override
+    public void deleteAppointment(Appointment appointment) {
+        appointmentDb.delete(appointment);
+    }
+
 }

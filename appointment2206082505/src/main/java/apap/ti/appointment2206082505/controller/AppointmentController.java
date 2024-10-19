@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import apap.ti.appointment2206082505.dto.AddPatientAppointmentWrapperDTO;
 import apap.ti.appointment2206082505.dto.request.AddAppointmentRequestDTO;
+import apap.ti.appointment2206082505.dto.request.DeleteAppointmentRequestDTO;
 import apap.ti.appointment2206082505.dto.request.UpdateAppointmentRequestDTO;
 import apap.ti.appointment2206082505.model.Appointment;
 import apap.ti.appointment2206082505.model.Doctor;
@@ -287,6 +288,27 @@ public class AppointmentController {
         appointmentService.updateStatus(appointment, 2);
         model.addAttribute("appointment", appointment);
         return "detail-appointment";
+    }
+
+    @GetMapping("/appointment/{id}/delete")
+    public String formDeleteAppointment(@PathVariable("id") String id, Model model) {
+        var appointmentDTO = new DeleteAppointmentRequestDTO();
+        appointmentDTO.setId(id);
+
+        model.addAttribute("appointmentDTO", appointmentDTO);
+        model.addAttribute("message", 
+            String.format("Are you sure you want to delete appointment ID %s?", id));
+        return "form-delete-appointment";
+    }
+
+    @PostMapping("/appointment/delete")
+    public String deleteAppointment(@ModelAttribute DeleteAppointmentRequestDTO appointmentDTO, Model model) {
+        var appointment = appointmentService.getAppointmentById(appointmentDTO.getId());
+        appointmentService.deleteAppointment(appointment);
+
+        model.addAttribute("responseMessage", 
+            String.format("Appointment with ID %s has been successfully deleted", appointment.getId()));
+        return "success-delete-appointment";
     }
 
 }

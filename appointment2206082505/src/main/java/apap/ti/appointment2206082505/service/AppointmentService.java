@@ -12,4 +12,5 @@ public interface AppointmentService {
     Appointment updateAppointmentDoctorDate(Appointment appointment);
     Appointment updateAppointmentDiagnosisTreatment(Appointment appointment);
     Appointment updateStatus(Appointment appointment, int status);
+    void deleteAppointment(Appointment appointment);
 }

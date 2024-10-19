@@ -33,7 +33,7 @@
                     <form th:action="@{/appointment/{id}/cancel(id=${appointment.id})}" method="post" style="display:inline;">
                         <button type="submit" class="btn btn-warning">Cancel</button>
                     </form>
-                    <a type="button" class="btn btn-danger">Delete</a>
+                    <a type="button" class="btn btn-danger" th:href="@{/appointment/{id}/delete(id=${appointment.id})}">Delete</a>
                 </div>
             </div>
             <div class="card-body">

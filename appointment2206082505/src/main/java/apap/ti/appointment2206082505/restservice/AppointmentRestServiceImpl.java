@@ -85,4 +85,41 @@ public class AppointmentRestServiceImpl implements AppointmentRestService {
         return appointmentResponseDTO;
     }
 
+    @Override
+    public List<Integer> getAppointmentStats(String period, int year) {
+        if ("monthly".equals(period)) {
+            return getMonthlyStats(year);
+        } else if ("quarterly".equals(period)) {
+            return getQuarterlyStats(year);
+        }
+        throw new IllegalArgumentException("Invalid period: " + period);
+    }
+
+    private List<Integer> getMonthlyStats(int year) {
+        List<Integer> monthlyStats = new ArrayList<>(Collections.nCopies(12, 0));
+        List<Object[]> results = appointmentDb.getMonthlyAppointmentCounts(year);
+        
+        for (Object[] result : results) {
+            int month = ((Number) result[0]).intValue() - 1; // Adjust for 0-based index
+            int count = ((Number) result[1]).intValue();
+            monthlyStats.set(month, count);
+        }
+        
+        return monthlyStats;
+    }
+
+    private List<Integer> getQuarterlyStats(int year) {
+        List<Integer> quarterlyStats = new ArrayList<>(Collections.nCopies(4, 0));
+        List<Object[]> results = appointmentDb.getQuarterlyAppointmentCounts(year);
+        
+        for (Object[] result : results) {
+            int quarter = ((Number) result[0]).intValue() - 1; // Adjust for 0-based index
+            int count = ((Number) result[1]).intValue();
+            quarterlyStats.set(quarter, count);
+        }
+        
+        return quarterlyStats;
+    }
+
+
 }

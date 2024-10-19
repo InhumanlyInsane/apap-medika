@@ -324,4 +324,9 @@ public class AppointmentController {
         return "success-delete-appointment";
     }
 
+    @GetMapping("/appointment/stat")
+    public String showStatPage() {
+        return "appointment-statistic";
+    }
+
 }

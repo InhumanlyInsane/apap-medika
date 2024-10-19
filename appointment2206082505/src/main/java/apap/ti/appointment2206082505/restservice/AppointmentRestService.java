@@ -6,4 +6,5 @@ import apap.ti.appointment2206082505.restdto.response.AppointmentResponseDTO;
 
 public interface AppointmentRestService {
     List<AppointmentResponseDTO> getAllAppointment();
+    List<Integer> getAppointmentStats(String period, int year);
 }

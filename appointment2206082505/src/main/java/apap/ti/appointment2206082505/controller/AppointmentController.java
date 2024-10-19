@@ -24,6 +24,7 @@ import apap.ti.appointment2206082505.model.Appointment;
 import apap.ti.appointment2206082505.model.Doctor;
 import apap.ti.appointment2206082505.model.Patient;
 import apap.ti.appointment2206082505.model.Treatment;
+import apap.ti.appointment2206082505.restdto.response.AppointmentResponseDTO;
 import apap.ti.appointment2206082505.service.AppointmentService;
 import apap.ti.appointment2206082505.service.DoctorService;
 import apap.ti.appointment2206082505.service.PatientService;
@@ -47,7 +48,21 @@ public class AppointmentController {
     
     @GetMapping("/")
     private String home(Model model) {
-        return "home";
+        try {
+            var listAppointment = appointmentService.getAllAppointments();
+            int totalAppointmentToday = 0;
+            for (Appointment appointment : listAppointment) {
+                if (appointment.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate().equals(LocalDate.now())) {
+                    totalAppointmentToday++;
+                }
+            }
+            
+            model.addAttribute("totalAppointmentToday", totalAppointmentToday);
+            return "home";
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", e.getMessage());
+            return "response-error-rest";
+        }
     }
 
     @GetMapping("/appointment/all")

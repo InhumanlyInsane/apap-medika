@@ -21,8 +21,15 @@
 <body>
     <nav th:replace="~{fragments/navbar :: navbar}"></nav>
 
-    <div class="d-flex justify-content-center align-items-center" style="height: 80vh;">
-        <h1 class="fw-bold">Appointment System</h1>
+    <div class="d-flex flex-column justify-content-center align-items-center" style="height: 80vh;">
+        <h1 class="fw-bold text-center mb-3">Appointment System</h1>
+
+        <div class="card text-bg-primary mb-3" style="max-width: 18rem;">
+            <div class="card-body">
+                <h1 class="card-title text-center" th:text="${totalAppointmentToday}"></h1>
+                <p class="card-text text-center">Today's Ongoing Appointment</p>
+            </div>
+        </div>
     </div>
 </body>
 

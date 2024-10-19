@@ -67,6 +67,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     }
 
     @Override
+    public List<Appointment> getAllAppointments() {
+        return appointmentDb.findAll();
+    }
+
+    @Override
     public Appointment getAppointmentById(String id) {
         return appointmentDb.findById(id).get();
     }

@@ -17,7 +17,7 @@ import apap.ti.appointment2206082505.restdto.response.BaseResponseDTO;
 
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
-    
+
     private final AppointmentDb appointmentDb;
     private final WebClient webClient;
 
@@ -148,6 +148,11 @@ public class AppointmentServiceImpl implements AppointmentService{
     @Override
     public void deleteAppointment(Appointment appointment) {
         appointmentDb.delete(appointment);
+    }
+
+    @Override
+    public List<Appointment> getAppointmentsByDateRange(Date startDate, Date endDate) {
+        return appointmentDb.findByDateBetween(startDate, endDate);
     }
 
 }

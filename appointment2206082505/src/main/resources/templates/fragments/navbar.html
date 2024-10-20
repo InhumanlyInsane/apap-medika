@@ -3,41 +3,35 @@
 
 <head>
     <meta charset="UTF-8">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
-        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" />
-    <title>Home</title>
-
-    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}">
-    <script th:src="@{/js/bootstrap.bundle.min.js}"></script>
-
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
-
-    <object th:include="~{fragments/common :: js}" th:remove="tag "></object>
-    <object th:include="~{fragments/common :: css}" th:remove="tag "></object>
-
+    <title>APAP Medika</title>
+    <object th:include="~{fragments/common :: css}" th:remove="tag"></object>
+    <object th:include="~{fragments/common :: js}" th:remove="tag"></object>
 </head>
 
-<nav th:fragment="navbar" class="navbar navbar-expand-lg" style="background-color: purple;">
-    <div class="container-fluid">
-        <a class="navbar-brand fw-bold" href="/" style="color: white;">ApapMedika</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item me-3">
-                    <a class="nav-link" href="/" style="color: white;">Home</a>
-                </li>
-                <li class="nav-item me-3">
-                    <a class="nav-link" href="/appointment/all" style="color: white;">Appointment</a>
-                </li>
-                <li class="nav-item me-3">
-                    <a class="nav-link" href="/doctor/all" style="color: white;">Doctors</a>
-                </li>
-            </ul>
+<body>
+    <nav th:fragment="navbar" class="navbar navbar-expand-lg navbar-dark bg-body-tertiary gradient-custom">
+        <div class="container-fluid">
+            <a class="navbar-brand fw-bold" href="/" style="color: white;">
+                <i class="fas fa-clinic-medical"></i>   APAP Medika
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item me-3">
+                        <a class="nav-link" id="nav-home" href="/" style="color: white;">Home</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" id="nav-appointment" href="/appointment/all" style="color: white;">Appointment</a>
+                    </li>
+                    <li class="nav-item me-3">
+                        <a class="nav-link" id="nav-doctor" href="/doctor/all" style="color: white;">Doctors</a>
+                    </li>
+                </ul>
+            </div>
         </div>
-    </div>
-</nav>
+    </nav>
+</body>
 
 </html>

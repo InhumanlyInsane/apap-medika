@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import apap.ti.appointment2206082505.dto.request.AddDoctorRequestDTO;
 import apap.ti.appointment2206082505.dto.request.DeleteDoctorRequestDTO;
-import apap.ti.appointment2206082505.dto.request.UpdateAppointmentRequestDTO;
 import apap.ti.appointment2206082505.dto.request.UpdateDoctorRequestDTO;
 import apap.ti.appointment2206082505.model.Doctor;
 import apap.ti.appointment2206082505.service.DoctorService;

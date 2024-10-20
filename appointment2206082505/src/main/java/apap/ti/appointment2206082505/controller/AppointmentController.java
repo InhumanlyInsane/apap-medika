@@ -24,7 +24,6 @@ import apap.ti.appointment2206082505.model.Appointment;
 import apap.ti.appointment2206082505.model.Doctor;
 import apap.ti.appointment2206082505.model.Patient;
 import apap.ti.appointment2206082505.model.Treatment;
-import apap.ti.appointment2206082505.restdto.response.AppointmentResponseDTO;
 import apap.ti.appointment2206082505.service.AppointmentService;
 import apap.ti.appointment2206082505.service.DoctorService;
 import apap.ti.appointment2206082505.service.PatientService;
@@ -34,17 +33,18 @@ import apap.ti.appointment2206082505.service.TreatmentService;
 @Controller
 public class AppointmentController {
 
-    @Autowired
-    private AppointmentService appointmentService;
+    private final AppointmentService appointmentService;
+    private final DoctorService doctorService;
+    private final PatientService patientService;
+    private final TreatmentService treatmentService;
 
     @Autowired
-    private DoctorService doctorService;
-
-    @Autowired
-    private PatientService patientService;
-
-    @Autowired
-    private TreatmentService treatmentService;
+    public AppointmentController(AppointmentService appointmentService, DoctorService doctorService, PatientService patientService, TreatmentService treatmentService) {
+        this.appointmentService = appointmentService;
+        this.doctorService = doctorService;
+        this.patientService = patientService;
+        this.treatmentService = treatmentService;
+    }
     
     @GetMapping("/")
     private String home(Model model) {

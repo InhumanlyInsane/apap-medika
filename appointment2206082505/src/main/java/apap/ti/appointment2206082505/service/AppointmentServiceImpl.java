@@ -18,12 +18,12 @@ import apap.ti.appointment2206082505.restdto.response.BaseResponseDTO;
 @Service
 public class AppointmentServiceImpl implements AppointmentService{
     
-    @Autowired
-    private AppointmentDb appointmentDb;
-
+    private final AppointmentDb appointmentDb;
     private final WebClient webClient;
 
-    public AppointmentServiceImpl(WebClient.Builder webClientBuilder) {
+    @Autowired
+    public AppointmentServiceImpl(AppointmentDb appointmentDb, WebClient.Builder webClientBuilder) {
+        this.appointmentDb = appointmentDb;
         this.webClient = webClientBuilder.baseUrl("http://localhost:8080/api").build();
     }
 
